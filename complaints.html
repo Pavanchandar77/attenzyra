@@ -1,0 +1,5 @@
+{% extends "base.html" %}{% block title %}Complaints{% endblock %}{% block content %}
+<h1>Complaints</h1>
+{% if session.get('role')=='student' %}<form method="POST" class="form-card"><select name="recipient_type" required><option value="teacher">Class Teacher</option><option value="admin">Admin</option></select><input name="subject" placeholder="Subject" required><textarea name="message" placeholder="Complaint" required></textarea><button class="primary-button">Submit Complaint</button></form>{% endif %}
+{% for c in complaints %}<div class="card"><h3>{{ c['subject'] }}</h3><p>{{ c['message'] }}</p><p>Status: <b>{{ c['status'] }}</b></p>{% if c['action_taken'] %}<p>Action taken: {{ c['action_taken'] }}</p>{% endif %}
+{% if session.get('role') in ['admin','teacher'] %}<form method="POST" action="{{ url_for('update_complaint',complaint_id=c['id']) }}"><select name="status"><option>Pending</option><option>Action Taken</option><option>Resolved</option></select><input name="action_taken" placeholder="Action taken"><button class="primary-button">Update</button></form>{% endif %}</div>{% else %}<p>No complaints.</p>{% endfor %}{% endblock %}

@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}Menu | ATTENZYRA Attendance{% endblock %}
+
+{% block content %}
+<div class="menu-page">
+    <div class="menu-header">
+        <div>
+            <span class="menu-kicker">SCHOOL MANAGEMENT</span>
+            <h1>Menu</h1>
+            <p class="subtitle">Access all additional school management features from one place.</p>
+        </div>
+        <div class="menu-school-badge">🏫 {{ current_school_name }}</div>
+    </div>
+
+    <div class="menu-grid">
+        {% if session.get('role') in ['teacher','admin'] %}
+        <a class="menu-card" href="{{ url_for('subject_marks') }}">
+            <span class="menu-card-icon">📊</span><span class="menu-card-body"><h3>Subject Marks</h3><p>Written + internal marks with teacher subject restriction.</p></span><span class="menu-arrow">→</span>
+        </a>
+        {% endif %}
+
+        <a class="menu-card" href="{{ url_for('assignments') }}">
+            <span class="menu-card-icon">📝</span><span class="menu-card-body"><h3>Assignments / Projects</h3><p>Teachers assign work and students submit completed work.</p></span><span class="menu-arrow">→</span>
+        </a>
+
+        <a class="menu-card" href="{{ url_for('complaints') }}">
+            <span class="menu-card-icon">💬</span><span class="menu-card-body"><h3>Complaints</h3><p>Submit complaints and track status or action taken.</p></span><span class="menu-arrow">→</span>
+        </a>
+
+        <a class="menu-card" href="{{ url_for('calendar') }}">
+            <span class="menu-card-icon">📅</span><span class="menu-card-body"><h3>Calendar</h3><p>View events, festivals and holidays.</p></span><span class="menu-arrow">→</span>
+        </a>
+
+        <a class="menu-card" href="{{ url_for('announcements') }}">
+            <span class="menu-card-icon">📢</span><span class="menu-card-body"><h3>Announcements</h3><p>School announcements for students and teachers.</p></span><span class="menu-arrow">→</span>
+        </a>
+
+        <a class="menu-card" href="{{ url_for('timetable') }}">
+            <span class="menu-card-icon">🕐</span><span class="menu-card-body"><h3>Timetable</h3><p>Class timetables and the common exam timetable.</p></span><span class="menu-arrow">→</span>
+        </a>
+
+        <a class="menu-card" href="{{ url_for('profile') }}">
+            <span class="menu-card-icon">👤</span><span class="menu-card-body"><h3>Profile</h3><p>Manage your profile photo and account details.</p></span><span class="menu-arrow">→</span>
+        </a>
+
+        <a class="menu-card" href="{{ url_for('account_settings') }}">
+            <span class="menu-card-icon">🔐</span><span class="menu-card-body"><h3>Edit</h3><p>Edit only your own username and password instantly.</p></span><span class="menu-arrow">→</span>
+        </a>
+
+        <a class="menu-card" href="{{ url_for('change_requests') }}">
+            <span class="menu-card-icon">🔄</span><span class="menu-card-body"><h3>Detail Change Requests</h3><p>Request protected-detail changes for admin approval.</p></span><span class="menu-arrow">→</span>
+        </a>
+
+        {% if session.get('role') == 'student' %}
+        <a class="menu-card" href="{{ url_for('attendance_history') }}">
+            <span class="menu-card-icon">📋</span><span class="menu-card-body"><h3>Attendance History</h3><p>View complete present and absent dates.</p></span><span class="menu-arrow">→</span>
+        </a>
+        <a class="menu-card" href="{{ url_for('od') }}">
+            <span class="menu-card-icon">🎫</span><span class="menu-card-body"><h3>OD Request</h3><p>Request OD and track approval status.</p></span><span class="menu-arrow">→</span>
+        </a>
+        {% endif %}
+
+        {% if session.get('role') in ['teacher','admin'] %}
+        <a class="menu-card" href="{{ url_for('teachers') }}">
+            <span class="menu-card-icon">👨‍🏫</span><span class="menu-card-body"><h3>Teacher Details</h3><p>View teacher subject and class assignments.</p></span><span class="menu-arrow">→</span>
+        </a>
+        {% endif %}
+
+        {% if session.get('role') == 'admin' %}
+        <a class="menu-card" href="{{ url_for('od_records') }}">
+            <span class="menu-card-icon">📋</span><span class="menu-card-body"><h3>OD Attendance List</h3><p>View the complete date-wise OD request and attendance record.</p></span><span class="menu-arrow">→</span>
+        </a>
+        <a class="menu-card" href="{{ url_for('subjects') }}">
+            <span class="menu-card-icon">📚</span><span class="menu-card-body"><h3>Subjects</h3><p>Add subjects and assign subject/class-teacher roles.</p></span><span class="menu-arrow">→</span>
+        </a>
+        <a class="menu-card" href="{{ url_for('create_student') }}">
+            <span class="menu-card-icon">➕</span><span class="menu-card-body"><h3>Create Student</h3><p>Create a student account with a unique admission number.</p></span><span class="menu-arrow">→</span>
+        </a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

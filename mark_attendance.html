@@ -1,0 +1,192 @@
+{% extends "base.html" %}
+
+{% block title %}
+Mark Attendance | ATTENZYRA
+{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+
+    <div>
+
+        <h1>
+            Mark Attendance
+        </h1>
+
+        <p>
+            {{ today }}
+        </p>
+
+    </div>
+
+</div>
+
+
+<div class="attendance-instructions">
+
+    <strong>
+        How it works:
+    </strong>
+
+    <span>
+        All students are Present by default.
+        Select only the students who are Absent.
+    </span>
+
+</div>
+
+
+<div class="dashboard-filter">
+
+    <form method="GET" id="attendanceClassFilter">
+
+        <label>
+            Select Class
+        </label>
+
+        <select
+            name="class_name"
+            onchange="document.getElementById('attendanceClassFilter').submit()"
+        >
+
+            <option value="">
+                All Classes
+            </option>
+
+            {% for class_name in class_names %}
+
+                <option
+                    value="{{ class_name }}"
+                    {% if selected_class == class_name %}
+                        selected
+                    {% endif %}
+                >
+                    {{ class_name }}
+                </option>
+
+            {% endfor %}
+
+        </select>
+
+        <button
+            type="submit"
+            class="secondary-button"
+        >
+            Filter
+        </button>
+
+    </form>
+
+</div>
+
+
+<form method="POST">
+
+    <div class="attendance-toolbar">
+
+        <input
+            type="text"
+            id="studentSearch"
+            placeholder="Search student..."
+        >
+
+        <div class="attendance-counter">
+
+            Students:
+            <strong id="studentCount">
+                {{ students|length }}
+            </strong>
+
+        </div>
+
+    </div>
+
+
+    <div class="student-attendance-grid">
+
+        {% for student in students %}
+
+        <label
+            class="student-attendance-card"
+            data-student="{{ student.name|lower }}"
+            data-admission="{{ student.admission_no|lower }}"
+        >
+
+            <input
+                type="checkbox"
+                name="absent_students"
+                value="{{ student.admission_no }}"
+            >
+
+            <div class="student-information">
+
+                <strong>
+                    {{ student.name }}
+                </strong>
+
+                <span>
+                    Admission:
+                    {{ student.admission_no }}
+                </span>
+
+                <span>
+                    Class:
+                    {{ student.class_name }}
+                </span>
+
+            </div>
+
+
+            <div class="student-status">
+
+                <span class="status-present">
+                    PRESENT
+                </span>
+
+                <span class="status-absent">
+                    ABSENT
+                </span>
+
+            </div>
+
+        </label>
+
+        {% else %}
+
+        <div class="empty-state">
+
+            <h2>
+                Attendance Already Recorded
+            </h2>
+
+            <p>
+                There are no remaining students to record today.
+            </p>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+
+    {% if students %}
+
+    <div class="attendance-submit-area">
+
+        <button
+            type="submit"
+            class="primary-button"
+            onclick="return confirmAttendance()"
+        >
+            SAVE ATTENDANCE
+        </button>
+
+    </div>
+
+    {% endif %}
+
+</form>
+
+{% endblock %}

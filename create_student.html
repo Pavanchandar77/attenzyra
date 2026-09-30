@@ -1,0 +1,129 @@
+```html
+{% extends "base.html" %}
+
+{% block title %}Create Student{% endblock %}
+
+{% block content %}
+
+<h1>Create Student Account</h1>
+
+<form method="POST" class="form-card">
+
+    <input
+        name="admission_no"
+        placeholder="Unique admission number"
+        required
+    >
+
+    <input
+        name="name"
+        placeholder="Student name"
+        required
+    >
+
+    <select name="class_name" required>
+        <option value="">Select Class</option>
+
+        <!-- LKG -->
+        <option value="Class LKG A">Class LKG A</option>
+        <option value="Class LKG B">Class LKG B</option>
+        <option value="Class LKG C">Class LKG C</option>
+        <option value="Class LKG D">Class LKG D</option>
+        <option value="Class LKG E">Class LKG E</option>
+        <option value="Class LKG F">Class LKG F</option>
+
+        <!-- UKG -->
+        <option value="Class UKG A">Class UKG A</option>
+        <option value="Class UKG B">Class UKG B</option>
+        <option value="Class UKG C">Class UKG C</option>
+        <option value="Class UKG D">Class UKG D</option>
+        <option value="Class UKG E">Class UKG E</option>
+        <option value="Class UKG F">Class UKG F</option>
+
+        <!-- Class 1 -->
+        <option value="Class 1 A">Class 1 A</option>
+        <option value="Class 1 B">Class 1 B</option>
+        <option value="Class 1 C">Class 1 C</option>
+        <option value="Class 1 D">Class 1 D</option>
+
+        <!-- Class 2 -->
+        <option value="Class 2 A">Class 2 A</option>
+        <option value="Class 2 B">Class 2 B</option>
+        <option value="Class 2 C">Class 2 C</option>
+        <option value="Class 2 D">Class 2 D</option>
+
+        <!-- Class 3 -->
+        <option value="Class 3 A">Class 3 A</option>
+        <option value="Class 3 B">Class 3 B</option>
+        <option value="Class 3 C">Class 3 C</option>
+        <option value="Class 3 D">Class 3 D</option>
+
+        <!-- Class 4 -->
+        <option value="Class 4 A">Class 4 A</option>
+        <option value="Class 4 B">Class 4 B</option>
+        <option value="Class 4 C">Class 4 C</option>
+        <option value="Class 4 D">Class 4 D</option>
+
+        <!-- Class 5 -->
+        <option value="Class 5 A">Class 5 A</option>
+        <option value="Class 5 B">Class 5 B</option>
+        <option value="Class 5 C">Class 5 C</option>
+        <option value="Class 5 D">Class 5 D</option>
+
+        <!-- Class 6 -->
+        <option value="Class 6 A">Class 6 A</option>
+        <option value="Class 6 B">Class 6 B</option>
+        <option value="Class 6 C">Class 6 C</option>
+        <option value="Class 6 D">Class 6 D</option>
+
+        <!-- Class 7 -->
+        <option value="Class 7 A">Class 7 A</option>
+        <option value="Class 7 B">Class 7 B</option>
+        <option value="Class 7 C">Class 7 C</option>
+        <option value="Class 7 D">Class 7 D</option>
+
+        <!-- Class 8 -->
+        <option value="Class 8 A">Class 8 A</option>
+        <option value="Class 8 B">Class 8 B</option>
+        <option value="Class 8 C">Class 8 C</option>
+        <option value="Class 8 D">Class 8 D</option>
+
+        <!-- Class 9 -->
+        <option value="Class 9 A">Class 9 A</option>
+        <option value="Class 9 B">Class 9 B</option>
+        <option value="Class 9 C">Class 9 C</option>
+        <option value="Class 9 D">Class 9 D</option>
+
+        <!-- Class 10 -->
+        <option value="Class 10 A">Class 10 A</option>
+        <option value="Class 10 B">Class 10 B</option>
+        <option value="Class 10 C">Class 10 C</option>
+        <option value="Class 10 D">Class 10 D</option>
+
+        <!-- Class 11 -->
+        <option value="Class 11 A">Class 11 A</option>
+        <option value="Class 11 B">Class 11 B</option>
+        <option value="Class 11 C">Class 11 C</option>
+        <option value="Class 11 D">Class 11 D</option>
+
+        <!-- Class 12 -->
+        <option value="Class 12 A">Class 12 A</option>
+        <option value="Class 12 B">Class 12 B</option>
+        <option value="Class 12 C">Class 12 C</option>
+        <option value="Class 12 D">Class 12 D</option>
+
+    </select>
+
+    <button class="primary-button" type="submit">
+        Create Student
+    </button>
+
+</form>
+
+<p>
+    Initial username and password are the admission number.
+</p>
+
+{% endblock %}
+```
+

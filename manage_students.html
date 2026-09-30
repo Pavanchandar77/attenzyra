@@ -1,0 +1,367 @@
+{% extends "base.html" %}
+
+{% block title %}
+Manage Students | ATTENZYRA
+{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+
+    <div>
+
+        <h1>
+            Manage Students
+        </h1>
+
+        <p>
+            Add, edit and remove students.
+        </p>
+
+    </div>
+
+    <span class="student-count">
+        {{ students|length }} Students
+    </span>
+
+</div>
+
+
+<div class="manage-layout">
+
+
+    <!-- ADD STUDENT -->
+
+    <div class="student-form-card">
+
+        <h2>
+            Add Student
+        </h2>
+
+        <p class="form-help">
+            Initial student password will be the admission number.
+        </p>
+
+
+        <form
+            method="POST"
+            class="student-form"
+        >
+
+            <div class="form-group">
+
+                <label>
+                    Admission Number
+                </label>
+
+                <input
+                    type="text"
+                    name="admission_no"
+                    required
+                    placeholder="Example: 1009"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Student Name
+                </label>
+
+                <input
+                    type="text"
+                    name="name"
+                    required
+                    placeholder="Student name"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Class
+                </label>
+
+                <input
+                    type="text"
+                    name="class_name"
+                    required
+                    placeholder="Example: Class 11 A"
+                >
+
+            </div>
+
+
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label>Blood Group</label>
+                    <input type="text" name="blood_group" placeholder="Example: O+ve">
+                </div>
+
+                <div class="form-group">
+                    <label>Gmail / Email</label>
+                    <input type="email" name="email" placeholder="student@gmail.com">
+                </div>
+
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="tel" name="phone" placeholder="10-digit phone number">
+                </div>
+
+                <div class="form-group full-width">
+                    <label>Address</label>
+                    <textarea name="address" rows="3" placeholder="Student address"></textarea>
+                </div>
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="primary-button full-button"
+            >
+                ADD STUDENT
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <!-- STUDENT LIST -->
+
+    <div class="student-list-card">
+
+        <div class="section-title">
+
+            <h2>
+                Student List
+            </h2>
+
+        </div>
+
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Admission
+                        </th>
+
+                        <th>
+                            Name
+                        </th>
+
+                        <th>
+                            Class
+                        </th>
+
+                        <th>
+                            Roll No.
+                        </th>
+
+                        <th>
+                            Blood Group
+                        </th>
+
+                        <th>
+                            Email
+                        </th>
+
+                        <th>
+                            Phone
+                        </th>
+
+                        <th>
+                            Address
+                        </th>
+
+                        <th>
+                            Actions
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for student in students %}
+
+                    <tr>
+
+                        <td>
+                            {{ student.admission_no }}
+                        </td>
+
+                        <td>
+                            {{ student.name }}
+                        </td>
+
+                        <td>
+                            {{ student.class_name }}
+                        </td>
+
+                        <td>
+                            {{ student.roll_no or "—" }}
+                        </td>
+
+                        <td>
+                            {{ student.blood_group or "—" }}
+                        </td>
+
+                        <td>
+                            {{ student.email or "—" }}
+                        </td>
+
+                        <td>
+                            {{ student.phone or "—" }}
+                        </td>
+
+                        <td>
+                            {{ student.address or "—" }}
+                        </td>
+
+                        <td>
+
+                            <div class="action-buttons">
+
+                                <button
+                                    type="button"
+                                    class="edit-button"
+                                    onclick="editStudent(
+                                        '{{ student.admission_no }}',
+                                        '{{ student.name|e }}',
+                                        '{{ student.class_name|e }}'
+                                    )"
+                                >
+                                    Edit
+                                </button>
+
+
+                                <button
+                                    type="button"
+                                    class="delete-button"
+                                    onclick="deleteStudent(
+                                        '{{ student.admission_no }}'
+                                    )"
+                                >
+                                    Delete
+                                </button>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                    {% else %}
+
+                    <tr>
+
+                        <td
+                            colspan="9"
+                            class="no-records"
+                        >
+                            No students found.
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- EDIT MODAL -->
+
+<div
+    class="modal"
+    id="editModal"
+>
+
+    <div class="modal-content">
+
+        <button
+            class="modal-close"
+            type="button"
+            onclick="closeEditModal()"
+        >
+            ×
+        </button>
+
+        <h2>
+            Edit Student
+        </h2>
+
+        <form id="editStudentForm">
+
+            <input
+                type="hidden"
+                id="editAdmission"
+            >
+
+
+            <div class="form-group">
+
+                <label>
+                    Student Name
+                </label>
+
+                <input
+                    type="text"
+                    id="editName"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Class
+                </label>
+
+                <input
+                    type="text"
+                    id="editClass"
+                    required
+                >
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="primary-button full-button"
+            >
+                SAVE CHANGES
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

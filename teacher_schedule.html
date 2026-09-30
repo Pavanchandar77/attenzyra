@@ -1,0 +1,5 @@
+{% extends "base.html" %}{% block title %}My Subject Periods{% endblock %}{% block content %}
+<h1>My Subject Periods</h1><p>Teacher: <strong>{{ teacher }}</strong></p>
+<div class="feature-card"><h2>Assigned Subjects / Classes</h2><table><tr><th>Class</th><th>Subject</th><th>Class Teacher</th></tr>{% for a in assignments %}<tr><td>{{ a['class_name'] }}</td><td>{{ a['subject'] }}</td><td>{{ 'Yes' if a['is_class_teacher'] else 'No' }}</td></tr>{% else %}<tr><td colspan="3">No subject assignments yet.</td></tr>{% endfor %}</table></div>
+<div class="feature-card"><h2>Periods & Timing</h2><table><tr><th>Day</th><th>Period</th><th>Class</th><th>Subject</th><th>Timing</th></tr>{% for r in rows %}<tr><td>{{ r['day_name'] }}</td><td>{{ r['period_no'] }}</td><td>{{ r['class_name'] }}</td><td>{{ r['subject'] }}</td><td>{{ r['start_time'] }} - {{ r['end_time'] }}</td></tr>{% else %}<tr><td colspan="5">No timetable periods assigned to this teacher yet.</td></tr>{% endfor %}</table></div>
+{% endblock %}

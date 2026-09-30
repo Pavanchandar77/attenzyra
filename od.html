@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% block title %}OD Requests{% endblock %}
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1>On Duty (OD) Requests</h1>
+        {% if session.get('role') == 'student' %}
+            <p>Submit an OD request and track whether it is Pending, Accepted or Denied.</p>
+        {% else %}
+            <p>Review student OD requests. Only the Admin can accept or deny an OD request.</p>
+        {% endif %}
+    </div>
+</div>
+
+{% if session.get('role') == 'student' %}
+<div class="student-form-card">
+    <form method="POST" class="form-card">
+        <div class="form-grid">
+            <div class="form-group">
+                <label>OD Date</label>
+                <input type="date" name="request_date" required>
+            </div>
+            <div class="form-group" style="grid-column: 1 / -1;">
+                <label>Reason</label>
+                <textarea name="reason" placeholder="Enter the reason for requesting OD" required></textarea>
+            </div>
+        </div>
+        <button class="primary-button" type="submit">Request OD</button>
+    </form>
+</div>
+{% endif %}
+
+<div class="analytics-section">
+    <h2>{% if session.get('role') == 'admin' %}All OD Requests{% else %}My OD Requests{% endif %}</h2>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    {% if session.get('role') == 'admin' %}<th>Student</th><th>Class</th><th>Admission No.</th>{% endif %}
+                    <th>OD Date</th>
+                    <th>Reason</th>
+                    <th>Status</th>
+                    {% if session.get('role') == 'admin' %}<th>Action By</th><th>Action</th>{% endif %}
+                </tr>
+            </thead>
+            <tbody>
+            {% for r in requests %}
+                <tr>
+                    {% if session.get('role') == 'admin' %}
+                        <td>{{ r['name'] or r['admission_no'] }}</td>
+                        <td>{{ r['class_name'] or '—' }}</td>
+                        <td>{{ r['admission_no'] }}</td>
+                    {% endif %}
+                    <td>{{ r['request_date'] }}</td>
+                    <td>{{ r['reason'] }}</td>
+                    <td>
+                        {% if r['status'] == 'Accepted' %}
+                            <strong>Accepted — Attendance marked OD</strong>
+                        {% elif r['status'] == 'Denied' %}
+                            <strong>Denied</strong>
+                        {% else %}
+                            <strong>Pending</strong>
+                        {% endif %}
+                    </td>
+                    {% if session.get('role') == 'admin' %}
+                        <td>{{ r['action_by'] or '—' }}</td>
+                        <td>
+                            {% if r['status'] == 'Pending' %}
+                                <form method="POST" action="{{ url_for('od_decision', request_id=r['id']) }}" style="display:inline-block; margin-right:6px;">
+                                    <input type="hidden" name="status" value="Accepted">
+                                    <button class="primary-button" type="submit">Accept</button>
+                                </form>
+                                <form method="POST" action="{{ url_for('od_decision', request_id=r['id']) }}" style="display:inline-block;">
+                                    <input type="hidden" name="status" value="Denied">
+                                    <button class="danger-button" type="submit">Deny</button>
+                                </form>
+                            {% else %}
+                                <span>Decision completed</span>
+                            {% endif %}
+                        </td>
+                    {% endif %}
+                </tr>
+            {% else %}
+                <tr><td colspan="8">No OD requests yet.</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% if session.get('role') == 'admin' %}
+<div class="analytics-section">
+    <h2>OD Attendance Record</h2>
+    <p>For the complete date-wise OD record, including the automatic attendance status, open <a href="{{ url_for('od_records') }}">OD Attendance List</a>.</p>
+</div>
+{% endif %}
+{% endblock %}

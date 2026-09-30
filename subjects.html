@@ -1,0 +1,4 @@
+{% extends "base.html" %}{% block title %}Subjects{% endblock %}{% block content %}
+<h1>Subjects & Teacher Assignment</h1><div class="feature-card"><form method="POST" class="teacher-assignment-grid"><input name="name" placeholder="New subject" required><button class="primary-button">Add Subject</button></form></div>
+<div class="feature-card"><h2>Multiple Subject / Class Assignment</h2><p>Use the dedicated assignment page to give one teacher many subjects and classes.</p><a class="secondary-button" href="{{ url_for('teacher_assignments_page') }}">Open Teacher Assignments</a></div>
+<div class="feature-card"><table><tr><th>Subject</th><th>Teachers</th></tr>{% for s in subjects %}<tr><td>{{ s['name'] }}</td><td>{% for t in teachers if t['subject']==s['name'] %}{{ t['username'] }} {% endfor %}</td></tr>{% endfor %}</table></div>{% endblock %}

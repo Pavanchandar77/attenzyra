@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        {% block title %}
+            ATTENZYRA Attendance Recorder
+        {% endblock %}
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+
+</head>
+
+<body class="ATTENZYRA-menu-page">
+
+{% if session.get("user_id") %}
+
+<button class="ATTENZYRA-menu-trigger" id="ATTENZYRAMenuTrigger" type="button" aria-label="Open dashboard menu">☰</button>
+<div class="ATTENZYRA-sidebar-overlay" id="ATTENZYRASidebarOverlay"></div>
+<aside class="ATTENZYRA-sidebar" id="ATTENZYRASidebar" aria-label="ATTENZYRA dashboard menu">
+    <div class="ATTENZYRA-sidebar-header"><strong>ATTENZYRA Menu</strong><button class="ATTENZYRA-sidebar-close" id="ATTENZYRAMenuClose" type="button">×</button></div>
+    {% if session.get('role') == 'boss' %}
+      <div class="ATTENZYRA-sidebar-section">Boss Admin</div>
+      <a href="{{ url_for('boss_dashboard') }}">👑 Boss Dashboard</a>
+      <a href="{{ url_for('account_settings') }}">🔐 Username / Password</a>
+    {% elif session.get('role') == 'admin' %}
+      <div class="ATTENZYRA-sidebar-section">Administration</div>
+      <a href="{{ url_for('dashboard') }}">🏠 Dashboard</a>
+      <a href="{{ url_for('mark_attendance') }}">📝 Attendance</a>
+      <a href="{{ url_for('attendance_records') }}">📊 Attendance Records</a>
+      <a href="{{ url_for('teachers') }}">👨‍🏫 Teacher IDs</a>
+      <a href="{{ url_for('teacher_assignments_page') }}">📚 Teacher Subjects & Classes</a>
+      <a href="{{ url_for('manage_students') }}">👨‍🎓 Manage Students</a>
+      <a href="{{ url_for('subject_marks') }}">🏆 Subject Marks</a>
+      <a href="{{ url_for('timetable') }}">🗓️ Timetable</a>
+      <a href="{{ url_for('substitutions') }}">🔄 Substitution</a>
+      <a href="{{ url_for('announcements') }}">📢 Announcements</a>
+      <a href="{{ url_for('calendar') }}">📅 Calendar</a>
+      <a href="{{ url_for('complaints') }}">💬 Complaints</a>
+      <a href="{{ url_for('od') }}">🎫 OD Requests</a>
+      <a href="{{ url_for('od_records') }}">📋 OD Attendance List</a>
+      <a href="{{ url_for('change_requests') }}">✏️ Detail Change Requests</a>
+      <a href="{{ url_for('profile') }}">🖼️ Profile</a>
+      <a href="{{ url_for('account_settings') }}">🔐 Username / Password</a>
+    {% elif session.get('role') == 'teacher' %}
+      <div class="ATTENZYRA-sidebar-section">Teaching</div>
+      <a href="{{ url_for('dashboard') }}">🏠 Dashboard</a>
+      <a href="{{ url_for('mark_attendance') }}">📝 My Class Attendance</a>
+      <a href="{{ url_for('attendance_records') }}">📊 My Class Records</a>
+      <a href="{{ url_for('teacher_schedule') }}">🕐 My Subject Periods</a>
+      <a href="{{ url_for('subject_students') }}">👥 My Subject Students</a>
+      <a href="{{ url_for('subject_marks') }}">🏆 My Subject Marks</a>
+      <a href="{{ url_for('features_hub') }}">📚 My Assigned Subjects</a>
+      <a href="{{ url_for('substitutions') }}">🔄 Substitution Offers</a>
+      <a href="{{ url_for('period_exchange') }}">🔁 Exchange Period</a>
+      <a href="{{ url_for('timetable') }}">🗓️ Timetable</a>
+      <a href="{{ url_for('announcements') }}">📢 Announcements</a>
+      <a href="{{ url_for('calendar') }}">📅 Calendar</a>
+      <a href="{{ url_for('complaints') }}">💬 Complaints</a>
+      <a href="{{ url_for('change_requests') }}">✏️ Detail Change Requests</a>
+      <a href="{{ url_for('profile') }}">🖼️ Profile</a>
+      <a href="{{ url_for('account_settings') }}">🔐 Username / Password</a>
+    {% elif session.get('role') == 'student' %}
+      <div class="ATTENZYRA-sidebar-section">Student</div>
+      <a href="{{ url_for('student_dashboard') }}">🏠 Dashboard</a>
+      <a href="{{ url_for('results') }}">🏆 Results</a>
+      <a href="{{ url_for('documents') }}">📚 Portion / Blueprint</a>
+      <a href="{{ url_for('assignments') }}">📎 Assignments & Projects</a>
+      <a href="{{ url_for('attendance_history') }}">📅 Attendance History</a>
+      <a href="{{ url_for('timetable') }}">🗓️ Timetable</a>
+      <a href="{{ url_for('announcements') }}">📢 Announcements</a>
+      <a href="{{ url_for('calendar') }}">🎉 Events & Holidays</a>
+      <a href="{{ url_for('complaints') }}">💬 Complaints</a>
+      <a href="{{ url_for('od') }}">🎫 OD Request</a>
+      <a href="{{ url_for('change_requests') }}">✏️ Detail Change Request</a>
+      <a href="{{ url_for('profile') }}">🖼️ Profile</a>
+      <a href="{{ url_for('account_settings') }}">🔐 Username / Password</a>
+    {% endif %}
+</aside>
+
+<header class="navbar">
+
+    <div class="nav-brand">
+
+        <a href="{{ url_for('home') }}">
+
+            <img
+                src="https://i.postimg.cc/Hs93kFX1/ATTENZYRA.png"
+                alt="ATTENZYRA"
+                class="navbar-logo"
+            >
+
+            <span>
+                ATTENDANCE RECORDER
+            </span>
+
+        </a>
+
+    </div>
+
+
+    <button
+        class="menu-button"
+        id="menuButton"
+        type="button"
+    >
+        ☰
+    </button>
+
+
+    <nav
+        class="nav-links"
+        id="navLinks"
+    >
+
+        {% if session.get("role") in ["teacher", "admin"] %}
+
+            <a href="{{ url_for('dashboard') }}">
+                Dashboard
+            </a>
+
+            <a href="{{ url_for('mark_attendance') }}">
+                Mark Attendance
+            </a>
+
+            <a href="{{ url_for('attendance_records') }}">
+                Records
+            </a>
+
+            <a href="{{ url_for('marks') }}">
+                Marks & Results
+            </a>
+
+            <a href="{{ url_for('documents') }}">
+                Portion / Blueprint
+            </a>
+
+            <a href="{{ url_for('features_hub') }}">
+                Menu
+            </a>
+
+            {% if session.get("role") == "admin" %}
+
+                <a href="{{ url_for('manage_students') }}">
+                    Manage Students
+                </a>
+
+            {% endif %}
+
+        {% elif session.get("role") == "student" %}
+
+            <a href="{{ url_for('student_dashboard') }}">
+                Dashboard
+            </a>
+
+            <a href="{{ url_for('student_biodata') }}">
+                Bio-data
+            </a>
+
+            <a href="{{ url_for('student_change_password') }}">
+                Change Password
+            </a>
+
+            <a href="{{ url_for('results') }}">
+                Results
+            </a>
+
+            <a href="{{ url_for('documents') }}">
+                Portion / Blueprint
+            </a>
+
+            <a href="{{ url_for('features_hub') }}">
+                Menu
+            </a>
+
+        {% endif %}
+
+
+        <span class="role-badge">
+            {{ session.get("role", "").upper() }}
+        </span>
+
+
+        <a
+            class="logout-button"
+            href="{{ url_for('logout') }}"
+        >
+            Logout
+        </a>
+
+    </nav>
+
+</header>
+
+{% endif %}
+
+
+<main class="main-container">
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+
+        {% if messages %}
+
+            {% for category, message in messages %}
+
+                <div class="alert alert-{{ category }}">
+
+                    <span>
+                        {{ message }}
+                    </span>
+
+                    <button
+                        class="close-alert"
+                        type="button"
+                    >
+                        ×
+                    </button>
+
+                </div>
+
+            {% endfor %}
+
+        {% endif %}
+
+    {% endwith %}
+
+
+    {% block content %}
+    {% endblock %}
+
+</main>
+
+
+<script
+    src="{{ url_for('static', filename='js/script.js') }}"
+></script>
+
+</body>
+
+</html>

@@ -1,0 +1,182 @@
+{% extends "base.html" %}
+
+{% block title %}
+Attendance Records
+{% endblock %}
+
+
+{% block content %}
+
+<div class="page-container">
+
+    <div class="page-header">
+
+        <div>
+
+            <h1>
+                Attendance Records
+            </h1>
+
+            <p>
+                Search and view attendance history
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <form
+        method="GET"
+        class="filter-card"
+    >
+
+        <div class="filter-group">
+
+            <label>
+                Date
+            </label>
+
+            <input
+                type="text"
+                name="date"
+                value="{{ selected_date or '' }}"
+                placeholder="DD-MM-YYYY"
+            >
+
+        </div>
+
+
+        <div class="filter-group">
+
+            <label>
+                Search
+            </label>
+
+            <input
+                type="text"
+                name="search"
+                value="{{ search }}"
+                placeholder="Name or admission number"
+            >
+
+        </div>
+
+
+        <button
+            type="submit"
+            class="action-button primary"
+        >
+            Search
+        </button>
+
+
+        <a
+            href="{{ url_for('attendance_records') }}"
+            class="action-button"
+        >
+            Clear
+        </a>
+
+    </form>
+
+
+    <div class="attendance-table-container">
+
+        <table class="data-table">
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        Date
+                    </th>
+
+                    <th>
+                        Time
+                    </th>
+
+                    <th>
+                        Admission No.
+                    </th>
+
+                    <th>
+                        Student Name
+                    </th>
+
+                    <th>
+                        Status
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                {% for record in records %}
+
+                <tr>
+
+                    <td>
+                        {{ record["date"] }}
+                    </td>
+
+                    <td>
+                        {{ record["time"] }}
+                    </td>
+
+                    <td>
+                        {{ record["admission_no"] }}
+                    </td>
+
+                    <td>
+                        {{ record["student_name"] }}
+                    </td>
+
+                    <td>
+
+                        {% if record["status"] == "Present" %}
+
+                        <span class="status-badge present">
+                            Present
+                        </span>
+
+                        {% else %}
+
+                        <span class="status-badge absent">
+                            Absent
+                        </span>
+
+                        {% endif %}
+
+                    </td>
+
+                </tr>
+
+                {% else %}
+
+                <tr>
+
+                    <td
+                        colspan="5"
+                        class="no-records"
+                    >
+                        No attendance records found.
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+{% endblock %}

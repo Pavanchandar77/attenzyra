@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Portion & Blueprint | ATTENZYRA{% endblock %}
+{% block content %}
+<div class="page-header"><div><h1>Portion & Blueprint</h1><p>Upload and access examination PDFs.</p></div></div>
+<div class="student-form-card">
+<h2>Upload PDF</h2>
+<form method="POST" enctype="multipart/form-data">
+<div class="form-grid">
+<div class="form-group"><label>Title</label><input name="title" required placeholder="Class 10 - Quarterly Portion"></div>
+<div class="form-group"><label>Section</label><select name="category" required><option value="portion">Portion</option><option value="blueprint">Blueprint</option></select></div>
+<div class="form-group full-width"><label>PDF File</label><input type="file" name="file" accept=".pdf,application/pdf" required></div>
+</div>
+<button class="primary-button" type="submit">UPLOAD PDF</button>
+</form>
+</div>
+<section class="analytics-section">
+<div class="section-heading"><h2>Uploaded Documents</h2></div>
+<div class="table-container"><table><thead><tr><th>Title</th><th>Section</th><th>Uploaded</th><th>Action</th></tr></thead><tbody>
+{% for d in documents %}<tr><td>{{ d.title }}</td><td>{{ d.category.title() }}</td><td>{{ d.uploaded_at[:19].replace('T',' ') }}</td><td><a class="secondary-button" target="_blank" href="{{ url_for('download_document', document_id=d.id) }}">Open PDF</a></td></tr>{% else %}<tr><td colspan="4" class="no-records">No PDFs uploaded yet.</td></tr>{% endfor %}
+</tbody></table></div>
+</section>
+{% endblock %}

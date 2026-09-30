@@ -1,0 +1,5 @@
+{% extends "base.html" %}{% block title %}Attendance History{% endblock %}{% block content %}
+<h1>Complete Attendance History</h1>
+<table><thead><tr><th>Date</th><th>Time</th><th>Status</th></tr></thead><tbody>
+{% for r in records %}<tr><td>{{ r['date'] }}</td><td>{{ r['time'] }}</td><td class="{{ 'present' if r['status']=='Present' else 'absent' }}">{{ r['status'] }}</td></tr>{% else %}<tr><td colspan="3">No attendance records yet.</td></tr>{% endfor %}
+</tbody></table>{% endblock %}

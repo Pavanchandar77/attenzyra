@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+{% block title %}Boss Admin | School Management{% endblock %}
+{% block content %}
+<div class="boss-page">
+    <div class="page-heading">
+        <div>
+            <span class="eyebrow">CENTRAL CONTROL</span>
+            <h1>Boss Admin</h1>
+            <p>Create schools and control school-level accounts from one place.</p>
+        </div>
+    </div>
+
+    {% if selected_school %}
+    <div class="selected-school-box boss-selected-school">
+        <span>Accounts will be created in:</span>
+        <strong>{{ selected_school['name'] }}</strong>
+    </div>
+    {% else %}
+    <div class="selected-school-box boss-selected-school">
+        <span>Create a new school first.</span>
+        <strong>Teacher and Student ID creation is locked until a school is selected.</strong>
+    </div>
+    {% endif %}
+
+    <div class="boss-grid">
+        <section class="boss-card">
+            <h2>🏫 Create New School</h2>
+            <p>Every new school receives its own separate SQLite database.</p>
+            <form method="POST" action="{{ url_for('boss_create_school') }}">
+                <label>School name</label>
+                <input name="name" placeholder="Example: Green Valley School" required>
+                <button class="primary-button" type="submit">Create Separate School</button>
+            </form>
+        </section>
+
+        <section class="boss-card">
+            <h2>👨‍🏫 Create Teacher Account</h2>
+            <form method="POST" action="{{ url_for('boss_create_teacher') }}">
+                <label>School</label>
+                {% if selected_school %}
+                <input type="hidden" name="school_slug" value="{{ selected_school['slug'] }}">
+                <div class="form-static-value">{{ selected_school['name'] }}</div>
+                {% else %}
+                <div class="form-static-value">Create a new school first</div>
+                {% endif %}
+                <label>Teacher username</label><input name="username" required placeholder="teacher6">
+                <label>Teacher name</label><input name="full_name" required placeholder="Teacher Name">
+                <label>Password</label><input name="password" placeholder="Teacher@123">
+                <label>Subject</label><input name="subject" placeholder="Mathematics">
+                <label>Class teacher</label><input name="class_teacher" placeholder="Class 11 A">
+                <label>Email</label><input name="email" type="email" placeholder="teacher@example.com">
+                <button class="primary-button" type="submit" {% if not selected_school %}disabled{% endif %}>Create Teacher</button>
+            </form>
+        </section>
+
+
+        <section class="boss-card">
+            <h2>🛡️ Create School Admin ID</h2>
+            <form method="POST" action="{{ url_for('boss_create_admin_account') }}">
+                <input type="hidden" name="school_slug" value="{{ selected_school['slug'] if selected_school else '' }}">
+                <label>Admin username</label><input name="username" required placeholder="schooladmin">
+                <label>Password</label><input name="password" placeholder="Admin@123">
+                <button class="primary-button" type="submit" {% if not selected_school %}disabled{% endif %}>Create Admin ID</button>
+            </form>
+        </section>
+        <section class="boss-card">
+            <h2>👨‍🎓 Create Student ID</h2>
+            <form method="POST" action="{{ url_for('boss_create_student') }}">
+                <label>School</label>
+                {% if selected_school %}
+                <input type="hidden" name="school_slug" value="{{ selected_school['slug'] }}">
+                <div class="form-static-value">{{ selected_school['name'] }}</div>
+                {% else %}
+                <div class="form-static-value">Create a new school first</div>
+                {% endif %}
+                <label>Admission number / Student ID</label><input name="admission_no" required placeholder="2001">
+                <label>Student name</label><input name="name" required placeholder="Student Name">
+                <label>Class</label>
+                <select name="class_name" required>
+                    <option value="">Select Class</option>
+                    {% for class_name in classes %}
+                        <option value="{{ class_name }}">{{ class_name }}</option>
+                    {% endfor %}
+                </select>
+                <label>Roll number</label><input name="roll_no" placeholder="01">
+                <label>Initial password</label><input name="password" placeholder="Same as admission number if blank">
+                <label>Email</label><input name="email" type="email" placeholder="student@example.com">
+                <label>Phone</label><input name="phone" placeholder="Phone number">
+                <button class="primary-button" type="submit" {% if not selected_school %}disabled{% endif %}>Create Student ID</button>
+            </form>
+        </section>
+    </div>
+
+    <section class="boss-card school-management-card">
+        <h2>📋 Schools & Separate Databases</h2>
+        <div class="school-management-list">
+            {% for s in schools %}
+            <div class="school-management-row">
+                <div><strong>{{ s['name'] }}</strong><span>Database: Separate</span></div>
+                <div class="school-management-actions">
+                    <span class="status-pill">{{ 'Active' if s['active'] else 'Inactive' }}</span>
+                    <a class="secondary-button" href="{{ url_for('boss_switch_school', slug=s['slug']) }}">Open School</a>
+                    {% if s['slug'] != 'our-school' %}
+                    <form method="POST" action="{{ url_for('boss_toggle_school', school_id=s['id']) }}"><button class="danger-button" type="submit">Enable / Disable</button></form>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <div class="boss-edit-actions">
+        <a class="secondary-button" href="{{ url_for('account_settings') }}">✏️ Edit Username / Password</a>
+    </div>
+
+</div>
+{% endblock %}

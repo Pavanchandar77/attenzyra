@@ -1,0 +1,3 @@
+{% extends "base.html" %}{% block title %}Announcements{% endblock %}{% block content %}
+<h1>Announcements</h1>{% if session.get('role')=='admin' %}<form method="POST" class="form-card"><input name="title" placeholder="Title" required><textarea name="message" placeholder="Message" required></textarea><select name="target"><option value="students">Students</option><option value="teachers">Teachers</option><option value="both">Students + Teachers</option></select><button class="primary-button">Publish</button></form>{% endif %}
+{% for a in announcements %}<div class="card"><h3>{{ a['title'] }}</h3><p>{{ a['message'] }}</p><small>{{ a['created_at'] }}</small></div>{% else %}<p>No announcements.</p>{% endfor %}{% endblock %}

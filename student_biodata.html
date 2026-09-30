@@ -1,0 +1,229 @@
+{% extends "base.html" %}
+
+{% block title %}
+Student Bio-data | ATTENZYRA
+{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+
+    <div>
+
+        <h1>
+            My Bio-data
+        </h1>
+
+        <p>
+            Update your personal information.
+        </p>
+
+    </div>
+
+</div>
+
+
+<div class="student-form-card">
+
+    <form method="POST">
+
+        <div class="form-grid">
+
+
+            <div class="form-group">
+
+                <label>
+                    Admission Number
+                </label>
+
+                <input
+                    type="text"
+                    value="{{ student.admission_no }}"
+                    disabled
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Class
+                </label>
+
+                <input
+                    type="text"
+                    value="{{ student.class_name }}"
+                    disabled
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Roll Number
+                </label>
+
+                <input
+                    type="text"
+                    name="roll_no"
+                    value="{{ student.roll_no or '' }}"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Name
+                </label>
+
+                <input
+                    type="text"
+                    name="name"
+                    value="{{ student.name }}"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Blood Group
+                </label>
+
+                <input
+                    type="text"
+                    name="blood_group"
+                    value="{{ student.blood_group or '' }}"
+                    placeholder="Example: O+"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Gmail / Email
+                </label>
+
+                <input
+                    type="email"
+                    name="email"
+                    value="{{ student.email or '' }}"
+                    placeholder="student@gmail.com"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Phone Number
+                </label>
+
+                <input
+                    type="tel"
+                    name="phone"
+                    value="{{ student.phone or '' }}"
+                    placeholder="10-digit phone number"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Mother Phone
+                </label>
+
+                <input
+                    type="tel"
+                    name="mother_phone"
+                    value="{{ student.mother_phone or '' }}"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Father Phone
+                </label>
+
+                <input
+                    type="tel"
+                    name="father_phone"
+                    value="{{ student.father_phone or '' }}"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Mother Email
+                </label>
+
+                <input
+                    type="email"
+                    name="mother_email"
+                    value="{{ student.mother_email or '' }}"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Father Email
+                </label>
+
+                <input
+                    type="email"
+                    name="father_email"
+                    value="{{ student.father_email or '' }}"
+                >
+
+            </div>
+
+
+            <div class="form-group full-width">
+
+                <label>
+                    Address
+                </label>
+
+                <textarea
+                    name="address"
+                    rows="4"
+                >{{ student.address or '' }}</textarea>
+
+            </div>
+
+        </div>
+
+
+        <button
+            type="submit"
+            class="primary-button"
+        >
+            SAVE BIO-DATA
+        </button>
+
+    </form>
+
+</div>
+
+{% endblock %}

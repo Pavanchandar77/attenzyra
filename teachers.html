@@ -1,0 +1,9 @@
+{% extends "base.html" %}{% block title %}Teachers{% endblock %}{% block content %}
+<h1>Teacher IDs & Details</h1>
+{% if session.get('role')=='admin' %}
+<div class="feature-card"><h2>➕ Create Teacher ID</h2><form method="POST" action="{{ url_for('admin_create_teacher_account') }}" class="teacher-assignment-grid">
+<input name="username" placeholder="Teacher username" required><input name="full_name" placeholder="Teacher full name" required><input name="password" placeholder="Initial password"><input name="email" type="email" placeholder="Email"><button class="primary-button">Create Teacher ID</button></form></div>
+{% endif %}
+<div class="feature-card"><h2>Teacher Accounts</h2><table><tr><th>Username</th><th>Name</th><th>Subject</th><th>Class Teacher</th></tr>{% for t in teachers %}<tr><td>{{ t['username'] }}</td><td>{{ t['full_name'] }}</td><td>{{ t['subject'] }}</td><td>{{ t['class_teacher'] }}</td></tr>{% endfor %}</table></div>
+{% if session.get('role')=='admin' %}<p><a class="secondary-button" href="{{ url_for('teacher_assignments_page') }}">Manage Multiple Subject/Class Assignments →</a></p>{% endif %}
+{% endblock %}

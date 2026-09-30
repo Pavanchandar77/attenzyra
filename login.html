@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}Login | ATTENZYRA Attendance Recorder{% endblock %}
+
+{% block content %}
+<div class="login-page school-login-page">
+    <div class="login-card school-login-card">
+        <div class="login-logo">
+            <img src="https://i.postimg.cc/Hs93kFX1/ATTENZYRA.png" alt="ATTENZYRA Logo" class="login-logo-image">
+        </div>
+
+        <h1>ATTENDANCE RECORDER</h1>
+        <p class="subtitle">Smart Attendance Management System</p>
+
+        <div class="login-section-title">Select your school</div>
+        <div class="school-list-login" id="schoolListLogin">
+            {% for school in school_list %}
+            <button type="button" class="school-option" data-school-slug="{{ school['slug'] }}" data-school-name="{{ school['name'] }}" aria-pressed="false">
+                <span class="school-option-icon">🏫</span>
+                <span class="school-option-name">{{ school['name'] }}</span>
+                <span class="school-option-arrow">›</span>
+            </button>
+            {% else %}
+            <div class="no-schools-message">No active schools are available right now.</div>
+            {% endfor %}
+        </div>
+
+        <button type="button" class="boss-login-option" id="bossLoginButton" aria-expanded="false">
+            <span>👑</span>
+            <span>Boss Admin Login</span>
+            <span class="boss-login-arrow">›</span>
+        </button>
+
+        <div class="selected-school-box" id="selectedSchoolBox" hidden>
+            <span>Selected school:</span>
+            <strong id="selectedSchoolName"></strong>
+        </div>
+
+        <form method="POST" id="schoolLoginForm">
+            <input type="hidden" name="school_slug" id="school_slug" value="">
+            <input type="hidden" name="account_type" id="account_type" value="school">
+
+            <div class="form-group">
+                <label for="username">Username / Admission No.</label>
+                <input type="text" id="username" name="username" autocomplete="new-password" required placeholder="Enter username">
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <div class="password-wrapper">
+                    <input type="password" id="password" name="password" autocomplete="off" required placeholder="Enter password">
+                    <button type="button" class="show-password" id="showPassword">Show</button>
+                </div>
+            </div>
+
+            <button type="submit" class="primary-button full-button" id="loginSubmitButton" disabled>SELECT A SCHOOL TO CONTINUE</button>
+        </form>
+
+        <div class="boss-login-panel" id="bossLoginPanel" hidden>
+            <div class="login-section-title">Boss Admin</div>
+            <p class="login-note">Use the central Boss Admin account to create and manage schools.</p>
+            <form method="POST" id="bossLoginForm">
+                <input type="hidden" name="account_type" value="boss">
+                <div class="form-group">
+                    <label for="bossUsername">Boss Username</label>
+                    <input type="text" id="bossUsername" name="username" autocomplete="username" required placeholder="Enter Boss username">
+                </div>
+                <div class="form-group">
+                    <label for="bossPassword">Boss Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="bossPassword" name="password" autocomplete="current-password" required placeholder="Enter Boss password">
+                        <button type="button" class="show-password" id="showBossPassword">Show</button>
+                    </div>
+                </div>
+                <button type="submit" class="primary-button full-button">LOGIN AS BOSS ADMIN</button>
+            </form>
+        </div>
+
+        <div class="login-links">
+            <a href="{{ url_for('forgot_password') }}">Forgot Password?</a>
+        </div>
+        <div class="login-account-options">
+            <a class="secondary-button" href="{{ url_for('login_create_teacher') }}">👨‍🏫 Create Teacher ID</a>
+            <a class="secondary-button" href="{{ url_for('login_create_student') }}">👨‍🎓 Create Student ID</a>
+        </div>
+        <p class="login-note">Authorized users only</p>
+    </div>
+</div>
+
+{% endblock %}

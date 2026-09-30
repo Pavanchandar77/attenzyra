@@ -1,0 +1,12 @@
+{% extends "base.html" %}{% block title %}Subject Marks{% endblock %}{% block content %}
+<h1>Subject Marks</h1>
+{% if session.get('role')=='teacher' %}<p>Only students in classes assigned to you are shown, and marks can be saved only for your assigned subjects.</p>{% endif %}
+<div class="feature-card"><form method="POST" class="teacher-assignment-grid">
+<label>Student<select name="admission_no" required>{% for s in students %}<option value="{{ s['admission_no'] }}">{{ s['admission_no'] }} - {{ s['name'] }} ({{ s['class_name'] }})</option>{% endfor %}</select></label>
+<label>Exam<select name="exam_type">{% for e in exam_types %}<option>{{ e }}</option>{% endfor %}</select></label>
+<label>Subject<select name="subject" required>{% for s in subjects %}<option value="{{ s['name'] }}">{{ s['name'] }}</option>{% endfor %}</select></label>
+<label>Written / External<input type="number" step="0.01" name="written_marks" min="0" value="0" required></label><label>Written maximum<input type="number" step="0.01" name="written_max" min="1" value="75" required></label>
+<label>Internal<input type="number" step="0.01" name="internal_marks" min="0" value="0" required></label><label>Internal maximum<input type="number" step="0.01" name="internal_max" min="1" value="25" required></label>
+<button class="primary-button">Save Marks</button></form></div>
+<div class="feature-card"><table><thead><tr><th>Student</th><th>Class</th><th>Exam</th><th>Subject</th><th>Written</th><th>Internal</th><th>Total</th></tr></thead><tbody>{% for r in records %}<tr><td>{{ r['name'] }}</td><td>{{ r['class_name'] }}</td><td>{{ r['exam_type'] }}</td><td>{{ r['subject'] }}</td><td>{{ r['written_marks'] }}/{{ r['written_max'] }}</td><td>{{ r['internal_marks'] }}/{{ r['internal_max'] }}</td><td>{{ r['written_marks']+r['internal_marks'] }}/{{ r['written_max']+r['internal_max'] }}</td></tr>{% else %}<tr><td colspan="7">No records.</td></tr>{% endfor %}</tbody></table></div>
+{% endblock %}

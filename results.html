@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Results | ATTENZYRA{% endblock %}
+{% block content %}
+<div class="page-header"><div><h1>{{ student.name }} - Exam Results</h1><p>Admission: {{ student.admission_no }} | Class: {{ student.class_name }}</p></div></div>
+{% for exam in exam_types %}
+<section class="analytics-section">
+<div class="section-heading"><h2>{{ exam }} Examination</h2><p>Total: {{ summaries[exam].total }} / {{ summaries[exam].maximum }} | Percentage: {{ summaries[exam].percentage }}%</p></div>
+<div class="table-container"><table><thead><tr><th>Subject</th><th>Marks</th><th>Maximum</th><th>Percentage</th></tr></thead><tbody>
+{% for r in grouped[exam] %}<tr><td>{{ r.subject }}</td><td>{{ r.marks }}</td><td>{{ r.max_marks }}</td><td>{{ "%.2f"|format((r.marks/r.max_marks*100) if r.max_marks else 0) }}%</td></tr>{% else %}<tr><td colspan="4" class="no-records">No marks entered for this exam.</td></tr>{% endfor %}
+</tbody></table></div>
+</section>
+{% endfor %}
+{% endblock %}

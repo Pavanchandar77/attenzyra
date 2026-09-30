@@ -1,0 +1,9 @@
+{% extends "base.html" %}{% block title %}Assignments{% endblock %}{% block content %}
+<h1>Assignments / Projects</h1>
+{% if session.get('role')=='teacher' %}
+<form method="POST" class="form-card"><input name="title" placeholder="Assignment / Project title" required><textarea name="description" placeholder="Description"></textarea>
+<select name="subject" required>{% for s in subjects %}<option>{{ s['name'] }}</option>{% endfor %}</select>
+<select name="class_name"><option value="">All classes</option>{% for c in classes %}<option>{{ c['class_name'] }}</option>{% endfor %}</select>
+<input type="date" name="due_date"><button class="primary-button">Assign</button></form>{% endif %}
+{% for a in assignments %}<div class="card"><h3>{{ a['title'] }}</h3><p>{{ a['description'] }}</p><p><b>Subject:</b> {{ a['subject'] }} | <b>Class:</b> {{ a['class_name'] or 'All' }} | <b>Due:</b> {{ a['due_date'] or 'Not set' }}</p>
+{% if session.get('role')=='student' %}{% if a['status'] %}<p>Status: <b>{{ a['status'] }}</b></p>{% endif %}<form method="POST" enctype="multipart/form-data" action="{{ url_for('submit_assignment',assignment_id=a['id']) }}"><input type="file" name="file" required><button class="primary-button">Submit Finished Work</button></form>{% else %}<p>Assigned by {{ a['created_by'] }}</p>{% endif %}</div>{% else %}<p>No assignments.</p>{% endfor %}{% endblock %}

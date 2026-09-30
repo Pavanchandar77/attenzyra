@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %}OD Attendance List{% endblock %}
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1>OD Attendance List</h1>
+        <p>Complete admin-only record of On Duty requests and their attendance status.</p>
+    </div>
+</div>
+
+<div class="analytics-section">
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Student</th>
+                    <th>Admission No.</th>
+                    <th>Class</th>
+                    <th>Reason</th>
+                    <th>Request Status</th>
+                    <th>Attendance</th>
+                    <th>Action By</th>
+                    <th>Action Time</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for r in records %}
+                <tr>
+                    <td>{{ r['request_date'] }}</td>
+                    <td>{{ r['name'] or r['admission_no'] }}</td>
+                    <td>{{ r['admission_no'] }}</td>
+                    <td>{{ r['class_name'] or '—' }}</td>
+                    <td>{{ r['reason'] }}</td>
+                    <td>
+                        {% if r['status'] == 'Accepted' %}
+                            <strong>Accepted</strong>
+                        {% elif r['status'] == 'Denied' %}
+                            <strong>Denied</strong>
+                        {% else %}
+                            <strong>Pending</strong>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if r['attendance_status'] == 'OD' %}
+                            <strong>OD — {{ r['attendance_date'] }}</strong>
+                        {% elif r['status'] == 'Denied' %}
+                            Not marked
+                        {% elif r['status'] == 'Pending' %}
+                            Pending
+                        {% else %}
+                            {{ r['attendance_status'] }}
+                        {% endif %}
+                    </td>
+                    <td>{{ r['action_by'] or '—' }}</td>
+                    <td>{{ r['action_at'] or '—' }}</td>
+                </tr>
+            {% else %}
+                <tr><td colspan="9">No OD records yet.</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div style="margin-top:18px;">
+    <a class="primary-button" href="{{ url_for('od') }}">← Back to OD Requests</a>
+</div>
+{% endblock %}

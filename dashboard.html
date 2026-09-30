@@ -1,0 +1,488 @@
+{% extends "base.html" %}
+
+{% block title %}
+Dashboard | ATTENZYRA Attendance
+{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+
+    <div>
+
+        <h1>
+            Attendance Dashboard
+        </h1>
+
+        <p>
+            Monitor attendance and class performance.
+        </p>
+
+    </div>
+
+    <div class="live-clock">
+
+        <span>
+            Today
+        </span>
+
+        <strong>
+            {{ today }}
+        </strong>
+
+    </div>
+
+</div>
+
+
+<!-- ================= CLASS FILTER ================= -->
+
+<div class="dashboard-filter">
+
+    <form method="GET">
+
+        <label>
+            Select Class
+        </label>
+
+        <select name="class_name">
+
+            <option value="">
+                All Classes
+            </option>
+
+            {% for class_name in class_names %}
+
+            <option
+                value="{{ class_name }}"
+                {% if selected_class == class_name %}
+                    selected
+                {% endif %}
+            >
+                {{ class_name }}
+            </option>
+
+            {% endfor %}
+
+        </select>
+
+        <button
+            type="submit"
+            class="primary-button"
+        >
+            Apply
+        </button>
+
+    </form>
+
+</div>
+
+
+<!-- ================= STATISTICS ================= -->
+
+<div class="dashboard-grid">
+
+    <!-- TOTAL STUDENTS -->
+
+    <div class="stat-card">
+
+        <div class="stat-icon">
+            👥
+        </div>
+
+        <div class="stat-content">
+
+            <span>
+                Total Students
+            </span>
+
+            <strong id="totalStudents">
+                {{ total_students }}
+            </strong>
+
+        </div>
+
+    </div>
+
+
+    <!-- RECORDED TODAY -->
+
+    <div class="stat-card">
+
+        <div class="stat-icon">
+            📝
+        </div>
+
+        <div class="stat-content">
+
+            <span>
+                Recorded Today
+            </span>
+
+            <strong id="recordedToday">
+                {{ recorded_today }}
+            </strong>
+
+        </div>
+
+    </div>
+
+
+    <!-- PRESENT -->
+
+    <div class="stat-card present-card">
+
+        <div class="stat-icon">
+            ✓
+        </div>
+
+        <div class="stat-content">
+
+            <span>
+                Present
+            </span>
+
+            <strong
+                id="presentCount"
+                class="present-number"
+            >
+                {{ present }}
+            </strong>
+
+        </div>
+
+    </div>
+
+
+    <!-- ABSENT -->
+
+    <div class="stat-card absent-card">
+
+        <div class="stat-icon">
+            ✕
+        </div>
+
+        <div class="stat-content">
+
+            <span>
+                Absent
+            </span>
+
+            <strong
+                id="absentCount"
+                class="absent-number"
+            >
+                {{ absent }}
+            </strong>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ================= QUICK ACTIONS ================= -->
+
+<section class="quick-actions">
+
+    <!-- MARK ATTENDANCE -->
+
+    <a
+        href="{{ url_for('mark_attendance') }}"
+        class="quick-action-button"
+    >
+        📝 Mark Attendance
+    </a>
+
+
+    <!-- VIEW RECORDS -->
+
+    <a
+        href="{{ url_for('attendance_records') }}"
+        class="quick-action-button"
+    >
+        📊 View Records
+    </a>
+
+
+    <!-- MANAGE STUDENTS - ADMIN ONLY -->
+
+    {% if session.get('role') == 'admin' %}
+
+    <a
+        href="{{ url_for('manage_students') }}"
+        class="quick-action-button"
+    >
+        👥 Manage Students
+    </a>
+
+    {% endif %}
+
+    <a
+        href="{{ url_for('marks') }}"
+        class="quick-action-button"
+    >
+        🏆 Marks & Results
+    </a>
+
+    <a
+        href="{{ url_for('documents') }}"
+        class="quick-action-button"
+    >
+        📚 Portion & Blueprint
+    </a>
+
+
+    <a
+        href="{{ url_for('features_hub') }}"
+        class="quick-action-button menu-quick-button"
+    >
+        ☰ Menu
+    </a>
+
+</section>
+
+
+<!-- ================= CLASS SUMMARY ================= -->
+
+<section class="analytics-section">
+
+    <div class="section-heading">
+
+        <h2>
+            Today's Class Summary
+        </h2>
+
+        <p>
+            Attendance status for each class.
+        </p>
+
+    </div>
+
+
+    <div class="table-container">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        Class
+                    </th>
+
+                    <th>
+                        Students
+                    </th>
+
+                    <th>
+                        Recorded
+                    </th>
+
+                    <th>
+                        Present
+                    </th>
+
+                    <th>
+                        Absent
+                    </th>
+
+                    <th>
+                        Percentage
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                {% for row in class_summary %}
+
+                <tr>
+
+                    <td>
+                        {{ row.class_name }}
+                    </td>
+
+                    <td>
+                        {{ row.total_students }}
+                    </td>
+
+                    <td>
+                        {{ row.recorded }}
+                    </td>
+
+                    <td class="status-present">
+                        {{ row.present }}
+                    </td>
+
+                    <td class="status-absent">
+                        {{ row.absent }}
+                    </td>
+
+                    <td>
+
+                        {{ "%.2f"|format(
+                            (row.present / row.total_students * 100)
+                            if row.total_students else 0
+                        ) }}%
+
+                    </td>
+
+                </tr>
+
+                {% else %}
+
+                <tr>
+
+                    <td
+                        colspan="6"
+                        class="no-records"
+                    >
+                        No classes available.
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+
+<!-- ================= MONTHLY / YEARLY CHARTS ================= -->
+
+<section class="analytics-section">
+
+    <div class="section-heading">
+
+        <h2>
+            Attendance Analytics
+        </h2>
+
+        <p>
+            Average attendance percentage per class.
+        </p>
+
+    </div>
+
+
+    <div class="chart-grid">
+
+
+        <!-- MONTHLY CHART -->
+
+        <div class="chart-card">
+
+            <div class="chart-header">
+
+                <div>
+
+                    <h3>
+                        Monthly Average
+                    </h3>
+
+                    <p>
+                        Current month's attendance by class.
+                    </p>
+
+                </div>
+
+                <span class="chart-badge">
+                    MONTHLY
+                </span>
+
+            </div>
+
+
+            <div class="chart-container">
+
+                <canvas id="monthlyAttendanceChart"></canvas>
+
+            </div>
+
+        </div>
+
+
+        <!-- YEARLY CHART -->
+
+        <div class="chart-card">
+
+            <div class="chart-header">
+
+                <div>
+
+                    <h3>
+                        Yearly Average
+                    </h3>
+
+                    <p>
+                        Current year's attendance by class.
+                    </p>
+
+                </div>
+
+                <span class="chart-badge">
+                    YEARLY
+                </span>
+
+            </div>
+
+
+            <div class="chart-container">
+
+                <canvas id="yearlyAttendanceChart"></canvas>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= CLASS-WISE CHART ================= -->
+
+<section class="analytics-section">
+
+    <div class="chart-card">
+
+        <div class="chart-header">
+
+            <div>
+
+                <h3>
+                    Today's Class Attendance
+                </h3>
+
+                <p>
+                    Present percentage by class.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="chart-container">
+
+            <canvas id="classAttendanceChart"></canvas>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+{% endblock %}

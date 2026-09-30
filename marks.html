@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Marks | ATTENZYRA{% endblock %}
+{% block content %}
+<div class="page-header"><div><h1>Marks & Exam Results</h1><p>Enter or update Quarterly, Half Yearly and Annual marks.</p></div></div>
+<div class="student-form-card">
+<h2>Enter Marks</h2>
+<form method="POST">
+<div class="form-grid">
+<div class="form-group"><label>Student</label><select name="admission_no" required>{% for s in students %}<option value="{{ s.admission_no }}">{{ s.admission_no }} - {{ s.name }} ({{ s.class_name }})</option>{% endfor %}</select></div>
+<div class="form-group"><label>Exam</label><select name="exam_type" required>{% for e in exam_types %}<option>{{ e }}</option>{% endfor %}</select></div>
+<div class="form-group"><label>Subject</label><input name="subject" required placeholder="Mathematics"></div>
+<div class="form-group"><label>Marks Obtained</label><input type="number" step="0.01" min="0" name="marks" required></div>
+<div class="form-group"><label>Maximum Marks</label><input type="number" step="0.01" min="1" name="max_marks" value="100" required></div>
+</div>
+<button class="primary-button" type="submit">SAVE MARKS</button>
+</form>
+</div>
+<section class="analytics-section">
+<div class="section-heading"><h2>Recent Marks</h2><p>Use View Result to see a student's complete result.</p></div>
+<div class="table-container"><table><thead><tr><th>Admission</th><th>Name</th><th>Exam</th><th>Subject</th><th>Marks</th><th>Result</th></tr></thead><tbody>
+{% for r in records %}<tr><td>{{ r.admission_no }}</td><td>{{ r.name }}</td><td>{{ r.exam_type }}</td><td>{{ r.subject }}</td><td>{{ r.marks }} / {{ r.max_marks }}</td><td><a class="secondary-button" href="{{ url_for('results', admission_no=r.admission_no) }}">View Result</a></td></tr>{% else %}<tr><td colspan="6" class="no-records">No marks entered yet.</td></tr>{% endfor %}
+</tbody></table></div></section>
+{% endblock %}

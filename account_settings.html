@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Edit Account{% endblock %}
+{% block content %}
+<div class="account-edit-page">
+    <div class="page-heading">
+        <div>
+            <span class="eyebrow">MY ACCOUNT</span>
+            <h1>✏️ Edit</h1>
+            <p>Edit only your own username and password. No request or admin approval is required.</p>
+        </div>
+    </div>
+
+    <form method="POST" class="form-card account-edit-card" autocomplete="off">
+        <label>Username</label>
+        <input name="username" value="{{ username }}" required maxlength="80">
+        <small>Your username must be unique within your school. Boss Admin usernames are unique in the central system.</small>
+
+        <label>New password</label>
+        <div class="password-field-row">
+            <input id="accountPassword" type="password" name="password" placeholder="Leave blank to keep current password" autocomplete="new-password">
+            <button type="button" class="secondary-button" onclick="toggleAccountPassword()">Show</button>
+        </div>
+
+        <button class="primary-button" type="submit">Save Changes</button>
+    </form>
+</div>
+<script>
+function toggleAccountPassword() {
+    const input = document.getElementById('accountPassword');
+    const button = event.currentTarget;
+    if (input.type === 'password') {
+        input.type = 'text';
+        button.textContent = 'Hide';
+    } else {
+        input.type = 'password';
+        button.textContent = 'Show';
+    }
+}
+</script>
+{% endblock %}

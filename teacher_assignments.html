@@ -1,0 +1,9 @@
+{% extends "base.html" %}{% block title %}Teacher Assignments{% endblock %}{% block content %}
+<h1>Teacher Subjects & Classes</h1><p>One teacher can be assigned to multiple subjects and multiple classes. Only the marked class teacher can take attendance for a class.</p>
+<div class="feature-card"><form method="POST" action="{{ url_for('add_teacher_assignment') }}" class="teacher-assignment-grid">
+<select name="username" required><option value="">Teacher</option>{% for t in teachers %}<option value="{{ t['username'] }}">{{ t['username'] }} — {{ t['full_name'] }}</option>{% endfor %}</select>
+<select name="class_name" required><option value="">Class</option>{% for c in classes %}<option value="{{ c['class_name'] }}">{{ c['class_name'] }}</option>{% endfor %}</select>
+<select name="subject" required><option value="">Subject</option>{% for s in subjects %}<option value="{{ s['name'] }}">{{ s['name'] }}</option>{% endfor %}</select>
+<label><input type="checkbox" name="is_class_teacher"> Class Teacher for this class</label><button class="primary-button">Assign</button></form></div>
+<div class="feature-card"><table><tr><th>Teacher</th><th>Class</th><th>Subject</th><th>Class Teacher</th><th>Action</th></tr>{% for r in rows %}<tr><td>{{ r['username'] }}</td><td>{{ r['class_name'] }}</td><td>{{ r['subject'] }}</td><td>{{ 'Yes' if r['is_class_teacher'] else 'No' }}</td><td><form method="POST" action="{{ url_for('delete_teacher_assignment', assignment_id=r['id']) }}"><button class="danger-button">Remove</button></form></td></tr>{% else %}<tr><td colspan="5">No assignments yet.</td></tr>{% endfor %}</table></div>
+{% endblock %}
