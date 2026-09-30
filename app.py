@@ -31,10 +31,42 @@ from werkzeug.security import (
 
 app = Flask(__name__)
 
-app.secret_key = secrets.token_hex(32)
+# Local runs keep a per-process key. On Vercel a stable key is required
+# or every cold start logs everyone out. Override with SECRET_KEY.
+app.secret_key = os.environ.get("SECRET_KEY") or (
+    "attenzyra-hosted-session" if os.environ.get("VERCEL") else secrets.token_hex(32)
+)
 
 BASE_FOLDER = Path(__file__).resolve().parent
 DATABASE_FILE = BASE_FOLDER / "attendance.db"
+
+# Vercel can read the project but cannot write beside it. When VERCEL is set,
+# copy the existing databases and static files to /tmp and write only there.
+# `python app.py` on a normal machine does not enter this branch.
+if os.environ.get("VERCEL"):
+    import shutil
+
+    _bundle_folder = BASE_FOLDER
+    BASE_FOLDER = Path("/tmp/attenzyra")
+    if not (BASE_FOLDER / ".ready").exists():
+        if BASE_FOLDER.exists():
+            shutil.rmtree(BASE_FOLDER, ignore_errors=True)
+        BASE_FOLDER.mkdir(parents=True, exist_ok=True)
+        for _db_name in ("attendance.db", "schools_master.db"):
+            _src = _bundle_folder / _db_name
+            if _src.exists():
+                shutil.copy2(_src, BASE_FOLDER / _db_name)
+        _schools = _bundle_folder / "school_data"
+        if _schools.exists():
+            shutil.copytree(_schools, BASE_FOLDER / "school_data")
+        else:
+            (BASE_FOLDER / "school_data").mkdir(parents=True, exist_ok=True)
+        _static = _bundle_folder / "static"
+        if _static.exists():
+            shutil.copytree(_static, BASE_FOLDER / "static")
+        (BASE_FOLDER / ".ready").write_text("1", encoding="utf-8")
+    DATABASE_FILE = BASE_FOLDER / "attendance.db"
+    app.static_folder = str((BASE_FOLDER / "static").resolve())
 CLASSES = [
     "Class LKG A", "Class LKG B", "Class LKG C",
     "Class LKG D", "Class LKG E", "Class LKG F",
